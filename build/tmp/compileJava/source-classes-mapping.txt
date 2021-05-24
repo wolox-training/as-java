@@ -1,6 +1,0 @@
-wolox/training/models/Book.java
- wolox.training.models.Book
-wolox/training/controllers/BookController.java
- wolox.training.controllers.BookController
-wolox/training/TrainingApplication.java
- wolox.training.TrainingApplication
