@@ -25,8 +25,11 @@ import wolox.training.repositories.BookRepository;
 @RequestMapping("/api/books")
 public class BookController {
 
-    @Autowired
-    private BookRepository repository;
+    private final BookRepository repository;
+
+    public BookController(final BookRepository repository) {
+        this.repository = repository;
+    }
 
     /**
      * Greets with a name
@@ -85,10 +88,9 @@ public class BookController {
      * @param id: Book identifier (Long)
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, BookError.WRONG_ID.getMsg()));
+        findOne(id);
         repository.deleteById(id);
     }
 
@@ -106,9 +108,7 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, BookError.BOOK_ID_MISMATCH.getMsg());
         }
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, BookError.WRONG_ID.getMsg()));
+        findOne(id);
         return repository.save(book);
     }
 }
