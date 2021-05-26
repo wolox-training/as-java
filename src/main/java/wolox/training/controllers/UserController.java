@@ -26,17 +26,22 @@ import wolox.training.repositories.UserRepository;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    BookRepository bookRepository;
+    private final BookRepository bookRepository;
+
+    public UserController(final UserRepository userRepository, final BookRepository bookRepository) {
+        this.userRepository = userRepository;
+        this.bookRepository = bookRepository;
+    }
 
     /**
      * Find all users
      *
      * @return all users
      */
-    @GetMapping()
+    @GetMapping
     public Iterable findAll() {
         return userRepository.findAll();
     }
@@ -47,6 +52,7 @@ public class UserController {
      * @param id: User identifier (Long)
      *
      * @return the user by id
+     * @exception ResponseStatusException if a user don´t exists
      */
     @GetMapping("/{id}")
     public User findOne(@PathVariable long id) {
@@ -71,8 +77,10 @@ public class UserController {
      * Delete user by Id
      *
      * @param id: User identifier (Long)
+     * @exception ResponseStatusException if a user don´t exists
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         findOne(id);
         userRepository.deleteById(id);
@@ -85,6 +93,7 @@ public class UserController {
      * @param user: User to update(Book)
      *
      * @return Uptaded user
+     * @exception ResponseStatusException if the userId and id requested mismatch
      */
     @PutMapping("/{id}")
     public User update(@PathVariable long id, @RequestBody User user) {
@@ -103,8 +112,10 @@ public class UserController {
      * @param bookId: Book identifier (Long)
      *
      * @return User whose book was updated
+     *
+     * @exception ResponseStatusException if the user or book don´t exists
      */
-    @PutMapping("/{id}/book/{bookId}")
+    @PutMapping("/{id}/books/{bookId}")
     public User addBook(@PathVariable long id, @PathVariable long bookId) {
         User user = findOne(id);
         Book book = bookRepository.findById(bookId).orElseThrow(
@@ -120,8 +131,9 @@ public class UserController {
      * @param bookId: Book identifier (Long)
      *
      * @return User who had the book removed
+     * @exception ResponseStatusException if the user or book don´t exists
      */
-    @DeleteMapping("/{id}/book/{bookId}")
+    @DeleteMapping("/{id}/books/{bookId}")
     public User removeBook(@PathVariable long id, @PathVariable long bookId) {
         User user = findOne(id);
         Book book = bookRepository.findById(bookId).orElseThrow(
