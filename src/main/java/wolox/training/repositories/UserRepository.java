@@ -9,11 +9,11 @@ import wolox.training.models.User;
 public interface UserRepository extends JpaRepository<User,Long> {
 
     /**
-     * Find user by user name
+     * Find user by username
      *
-     * @param userName: user name of the user (String)
-     * @return First user by the user name
+     * @param username: username of the user (String)
+     * @return First user by the username
      */
 
-    Optional<User> findFirstByUserName(String userName);
+    Optional<User> findFirstByUsername(String username);
 }
