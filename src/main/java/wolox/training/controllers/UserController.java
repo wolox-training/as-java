@@ -18,7 +18,9 @@ import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
-
+/**
+ * The api rest User controller.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
