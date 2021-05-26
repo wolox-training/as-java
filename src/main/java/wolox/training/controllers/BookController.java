@@ -22,8 +22,11 @@ import wolox.training.repositories.BookRepository;
 @RequestMapping("/api/books")
 public class BookController {
 
-    @Autowired
-    private BookRepository repository;
+    private final BookRepository repository;
+
+    public BookController(final BookRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("/greeting")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
@@ -50,6 +53,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         findOne(id);
         repository.deleteById(id);

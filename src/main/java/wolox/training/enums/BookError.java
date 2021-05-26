@@ -2,7 +2,7 @@ package wolox.training.enums;
 
 public enum BookError {
 
-    WRONG_ID("Provide correct Book Id"),
+    WRONG_ID("Provide incorrect Book Id"),
     BOOK_ID_MISMATCH("Book id mismatch");
 
     private String msg;
