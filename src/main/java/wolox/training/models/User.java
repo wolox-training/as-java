@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,7 @@ public class User {
     private long id;
 
     @NotNull
-    private String userName;
+    private String username;
 
     @NotNull
     private String name;
@@ -32,7 +33,7 @@ public class User {
     private LocalDate birthdate;
 
     @NotNull
-    @ManyToMany
+    @ManyToMany(cascade= CascadeType.PERSIST)
     private List<Book> books = new ArrayList<>();
 
     public User() {
@@ -43,11 +44,11 @@ public class User {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.userName = username;
+        this.username = username;
     }
 
     public String getName() {
