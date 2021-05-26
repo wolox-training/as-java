@@ -61,6 +61,7 @@ public class BookController {
      * @param id: Book identifier (Long)
      *
      * @return the book by the Id
+     * @exception ResponseStatusException if a book don´t exists
      */
     @GetMapping("/{id}")
     public Book findOne(@PathVariable Long id) {
@@ -86,6 +87,7 @@ public class BookController {
      * Delete a book by Id
      *
      * @param id: Book identifier (Long)
+     * @exception ResponseStatusException if a book don´t exists
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -101,6 +103,7 @@ public class BookController {
      * @param id:   Book identifier (Long)
      *
      * @return Updated Book
+     * @exception ResponseStatusException if a bookId and the id requested mismatch
      */
     @PutMapping("/{id}")
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
