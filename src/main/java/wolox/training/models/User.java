@@ -23,7 +23,7 @@ public class User {
     private long id;
 
     @NotNull
-    private String username;
+    private String userName;
 
     @NotNull
     private String name;
@@ -43,11 +43,11 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public String getName() {
