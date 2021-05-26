@@ -51,9 +51,7 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, BookError.WRONG_ID.getMsg()));
+        findOne(id);
         repository.deleteById(id);
     }
 
@@ -63,9 +61,7 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, BookError.BOOK_ID_MISMATCH.getMsg());
         }
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, BookError.WRONG_ID.getMsg()));
+        findOne(id);
         return repository.save(book);
     }
 }
