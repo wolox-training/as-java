@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Entity;
@@ -7,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import wolox.training.enums.ValidationError;
 
 /**
  * Model to the table Book.
@@ -56,7 +59,7 @@ public class Book {
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.id = checkNotNull(id, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getGenre() {
@@ -64,7 +67,7 @@ public class Book {
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        this.genre = checkNotNull(genre, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getAuthor() {
@@ -72,7 +75,7 @@ public class Book {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = checkNotNull(author, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getImage() {
@@ -80,7 +83,7 @@ public class Book {
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.image = checkNotNull(image, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getTitle() {
@@ -88,7 +91,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = checkNotNull(title, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getSubtitle() {
@@ -96,7 +99,7 @@ public class Book {
     }
 
     public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+        this.subtitle = checkNotNull(subtitle, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getPublisher() {
@@ -104,7 +107,7 @@ public class Book {
     }
 
     public void setPublisher(String publisher) {
-        this.publisher = publisher;
+        this.publisher = checkNotNull(publisher, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getYear() {
@@ -112,7 +115,7 @@ public class Book {
     }
 
     public void setYear(String year) {
-        this.year = year;
+        this.year = checkNotNull(year, ValidationError.NULL_VALUE.getMsg());
     }
 
     public int getPages() {
@@ -120,7 +123,7 @@ public class Book {
     }
 
     public void setPages(int pages) {
-        this.pages = pages;
+        this.pages = checkNotNull(pages, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getIsbn() {
@@ -128,6 +131,6 @@ public class Book {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn;
+        this.isbn = checkNotNull(isbn, ValidationError.NULL_VALUE.getMsg());
     }
 }
