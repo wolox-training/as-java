@@ -1,6 +1,10 @@
 package wolox.training.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +27,7 @@ import wolox.training.repositories.BookRepository;
  */
 @Controller
 @RequestMapping("/api/books")
+@Api
 public class BookController {
 
     private final BookRepository repository;
@@ -79,6 +84,8 @@ public class BookController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a book", response = Book.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successfully created Book")})
     public Book create(@RequestBody Book book) {
         return repository.save(book);
     }
@@ -91,7 +98,11 @@ public class BookController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    @ApiOperation(value = "Delete a book by Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted book"),
+            @ApiResponse(code = 404, message = "The book is not found")})
+    public void delete(@ApiParam(value = "the book id", example = "1", required = true) @PathVariable Long id) {
         findOne(id);
         repository.deleteById(id);
     }

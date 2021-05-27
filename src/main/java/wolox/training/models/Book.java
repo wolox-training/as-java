@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,13 +12,16 @@ import javax.validation.constraints.NotNull;
  * Model to the table Book.
  */
 @Entity
+@ApiModel(description = "Model to the Book")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @ApiModelProperty(value = "The identifier of the book", example = "321")
     private long id;
 
     @NotNull
+    @ApiModelProperty(value = "The gener of the book", example = "Action")
     private String genre;
 
     @NotNull
