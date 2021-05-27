@@ -33,7 +33,7 @@ public class User {
     private LocalDate birthdate;
 
     @NotNull
-    @ManyToMany(cascade= CascadeType.PERSIST)
+    @ManyToMany(cascade= CascadeType.MERGE)
     private List<Book> books = new ArrayList<>();
 
     public User() {
