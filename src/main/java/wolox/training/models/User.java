@@ -1,5 +1,8 @@
 package wolox.training.models;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import wolox.training.enums.ValidationError;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
 /**
@@ -42,12 +46,16 @@ public class User {
     public Long getId() {
         return id;
     }
+    public void setId(long id) {
+        this.id = checkNotNull(id, ValidationError.NULL_VALUE.getMsg());
+    }
 
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
+        checkArgument(!isNullOrEmpty(username), ValidationError.NULL_VALUE.getMsg());
         this.username = username;
     }
 
@@ -56,6 +64,7 @@ public class User {
     }
 
     public void setName(String name) {
+        checkArgument(!isNullOrEmpty(name), ValidationError.NULL_VALUE.getMsg());
         this.name = name;
     }
 
@@ -64,7 +73,9 @@ public class User {
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+        checkNotNull(birthdate, ValidationError.NULL_VALUE.getMsg());
+        checkArgument(birthdate.isBefore(LocalDate.now()), ValidationError.DATE_IS_AFTER.getMsg());
+        this.birthdate =birthdate;
     }
 
     public List<Book> getBooks() {
@@ -72,7 +83,7 @@ public class User {
     }
 
     public void setBooks(List<Book> books) {
-        this.books = books;
+        this.books = checkNotNull(books, ValidationError.NULL_VALUE.getMsg());
     }
 
     /**

@@ -1,5 +1,9 @@
 package wolox.training.models;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Entity;
@@ -7,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import wolox.training.enums.ValidationError;
 
 /**
  * Model to the table Book.
@@ -56,7 +61,7 @@ public class Book {
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.id = checkNotNull(id, ValidationError.NULL_VALUE.getMsg());
     }
 
     public String getGenre() {
@@ -64,6 +69,7 @@ public class Book {
     }
 
     public void setGenre(String genre) {
+        checkArgument(!isNullOrEmpty(genre), ValidationError.NULL_VALUE.getMsg());
         this.genre = genre;
     }
 
@@ -72,6 +78,7 @@ public class Book {
     }
 
     public void setAuthor(String author) {
+        checkArgument(!isNullOrEmpty(author), ValidationError.NULL_VALUE.getMsg());
         this.author = author;
     }
 
@@ -80,6 +87,7 @@ public class Book {
     }
 
     public void setImage(String image) {
+        checkArgument(!isNullOrEmpty(image), ValidationError.NULL_VALUE.getMsg());
         this.image = image;
     }
 
@@ -88,6 +96,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
+        checkArgument(!isNullOrEmpty(title), ValidationError.NULL_VALUE.getMsg());
         this.title = title;
     }
 
@@ -96,6 +105,7 @@ public class Book {
     }
 
     public void setSubtitle(String subtitle) {
+        checkArgument(!isNullOrEmpty(subtitle), ValidationError.NULL_VALUE.getMsg());
         this.subtitle = subtitle;
     }
 
@@ -104,6 +114,7 @@ public class Book {
     }
 
     public void setPublisher(String publisher) {
+        checkArgument(!isNullOrEmpty(publisher), ValidationError.NULL_VALUE.getMsg());
         this.publisher = publisher;
     }
 
@@ -112,6 +123,7 @@ public class Book {
     }
 
     public void setYear(String year) {
+        checkArgument(!isNullOrEmpty(year), ValidationError.NULL_VALUE.getMsg());
         this.year = year;
     }
 
@@ -120,6 +132,7 @@ public class Book {
     }
 
     public void setPages(int pages) {
+        checkArgument(pages == 0 , ValidationError.ZERO_VALUE.getMsg());
         this.pages = pages;
     }
 
@@ -128,6 +141,7 @@ public class Book {
     }
 
     public void setIsbn(String isbn) {
+        checkArgument(!isNullOrEmpty(isbn), ValidationError.NULL_VALUE.getMsg());
         this.isbn = isbn;
     }
 }
