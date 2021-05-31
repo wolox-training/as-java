@@ -1,7 +1,8 @@
 package wolox.training.models;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +55,8 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = checkNotNull(username, ValidationError.NULL_VALUE.getMsg());
+        checkArgument(!isNullOrEmpty(username), ValidationError.NULL_VALUE.getMsg());
+        this.username = username;
     }
 
     public String getName() {
@@ -62,7 +64,8 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = checkNotNull(name, ValidationError.NULL_VALUE.getMsg());
+        checkArgument(!isNullOrEmpty(name), ValidationError.NULL_VALUE.getMsg());
+        this.name = name;
     }
 
     public LocalDate getBirthdate() {
@@ -70,7 +73,9 @@ public class User {
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = checkNotNull(birthdate, ValidationError.NULL_VALUE.getMsg());
+        checkNotNull(birthdate, ValidationError.NULL_VALUE.getMsg());
+        checkArgument(birthdate.isBefore(LocalDate.now()), ValidationError.DATE_IS_AFTER.getMsg());
+        this.birthdate =birthdate;
     }
 
     public List<Book> getBooks() {
