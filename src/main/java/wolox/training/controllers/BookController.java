@@ -85,7 +85,7 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a book", response = Book.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successfully created Book")})
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Successfully created Book")})
     public Book create(@RequestBody Book book) {
         return repository.save(book);
     }
