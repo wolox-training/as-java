@@ -26,7 +26,7 @@ public class Book {
     private long id;
 
     @NotNull
-    @ApiModelProperty(value = "The gener of the book", example = "Action")
+    @ApiModelProperty(value = "The genre of the book", example = "Action")
     private String genre;
 
     @NotNull
