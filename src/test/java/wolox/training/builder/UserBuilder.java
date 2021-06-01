@@ -18,6 +18,7 @@ public class UserBuilder {
         user.setUsername("andreysanp");
         user.setName("andrey");
         user.setId(1L);
+        user.setPassword("3123123123");
         user.setBirthdate(LocalDate.of(1996,02,16));
         return user;
     }

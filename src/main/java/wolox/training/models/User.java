@@ -49,6 +49,9 @@ public class User {
     @ManyToMany(cascade= CascadeType.MERGE)
     private List<Book> books = new ArrayList<>();
 
+    @NotNull
+    private String password;
+
     public User() {
     }
 
@@ -117,4 +120,12 @@ public class User {
         books.remove(book);
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        checkArgument(!isNullOrEmpty(password), ValidationError.NULL_VALUE.getMsg());
+        this.password = password;
+    }
 }
