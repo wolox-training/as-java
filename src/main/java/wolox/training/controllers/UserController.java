@@ -1,9 +1,10 @@
 package wolox.training.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import wolox.training.enums.BookError;
 import wolox.training.enums.UserError;
 import wolox.training.models.Book;
+import wolox.training.models.Password;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
@@ -25,13 +27,18 @@ import wolox.training.repositories.UserRepository;
 @RequestMapping("/api/users")
 public class UserController {
 
+
     private final UserRepository userRepository;
 
     private final BookRepository bookRepository;
 
-    public UserController(final UserRepository userRepository, final BookRepository bookRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(final UserRepository userRepository, final BookRepository bookRepository,
+            final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -68,6 +75,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
+        encodePassword(user, user.getPassword());
         return userRepository.save(user);
     }
 
@@ -99,7 +107,7 @@ public class UserController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, UserError.ID_MISMATCH.getMsg());
         }
-        findOne(id);
+        safeguardPassword(findOne(id), user);
         return userRepository.save(user);
     }
 
@@ -138,5 +146,26 @@ public class UserController {
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, BookError.WRONG_ID.getMsg()));
         user.removeBook(book);
         return userRepository.save(user);
+    }
+
+    /**
+     * @param id:User identifier (Long)
+     * @param password: new password to save (String)
+     *
+     * @return Uptaded user
+     */
+    @PatchMapping("/{id}/password")
+    public User updatePassword(@PathVariable long id, @RequestBody Password password) {
+        User user = findOne(id);
+        encodePassword(user, password.getPassword());
+        return userRepository.save(user);
+    }
+
+    private void encodePassword(User user, String password){
+        user.setPassword(passwordEncoder.encode(password));
+    }
+
+    private void safeguardPassword(User userFound, User userRequest){
+        userRequest.setPassword(userFound.getPassword());
     }
 }
