@@ -132,7 +132,7 @@ public class Book {
     }
 
     public void setPages(int pages) {
-        checkArgument(pages == 0 , ValidationError.ZERO_VALUE.getMsg());
+        checkArgument(pages > 0 , ValidationError.ZERO_VALUE.getMsg());
         this.pages = pages;
     }
 
