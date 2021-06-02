@@ -47,4 +47,14 @@ class BookRepositoryTest {
 
         assertEquals(1, booksFound.size());
     }
+
+    @Test
+    public void testFindAllByPublisherIsAndGenreIsAndYearwhenYearAndGenreAreNullAndReturnABook() {
+        bookRepository.save(book());
+        String publisher = "War Car 2";
+
+        List<Book> booksFound = bookRepository.findAllByPublisherIsAndGenreIsAndYear(publisher, null, null);
+
+        assertEquals(1, booksFound.size());
+    }
 }

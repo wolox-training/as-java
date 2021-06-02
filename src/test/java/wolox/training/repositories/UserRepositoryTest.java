@@ -47,4 +47,15 @@ class UserRepositoryTest {
 
         assertEquals(1, usersFound.size());
     }
+
+    @Test
+    void testFindAllByBirthdateIsBetweenAndNameIgnoreCaseContainingWhencharacterIsNullAndReturnAUser() {
+        userRepository.save(user());
+        LocalDate startDate = LocalDate.of(1995,02,16);
+        LocalDate endDate = LocalDate.of(1997,02,16);
+
+        List<User> usersFound = userRepository.findAllByBirthdateIsBetweenAndNameIgnoreCaseContaining(startDate, endDate, null);
+
+        assertEquals(1, usersFound.size());
+    }
 }
