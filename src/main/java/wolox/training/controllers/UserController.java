@@ -1,6 +1,8 @@
 package wolox.training.controllers;
 
+import java.security.Principal;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -159,6 +161,18 @@ public class UserController {
         User user = findOne(id);
         encodePassword(user, password.getPassword());
         return userRepository.save(user);
+    }
+
+    /**
+     * Get the username of the authenticated user
+     *
+     * @param authentication: authentication context (Authentication)
+     *
+     * @return the username (String)
+     */
+    @GetMapping("/username")
+    public String currentUserName(Authentication authentication) {
+        return authentication.getName();
     }
 
     private void encodePassword(User user, String password){
