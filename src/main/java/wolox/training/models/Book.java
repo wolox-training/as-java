@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import wolox.training.enums.ValidationError;
 /**
  * Model to the table Book.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @ApiModel(description = "Model to the Book")
 public class Book {

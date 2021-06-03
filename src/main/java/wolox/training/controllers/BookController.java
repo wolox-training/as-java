@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,9 +72,9 @@ public class BookController {
      * @return all the books by the filters send
      */
     @GetMapping
-    public Iterable findAll(@RequestParam Map<String,String> params) {
+    public Iterable findAll(@RequestParam Map<String,String> params, Pageable pageable) {
         Book bookMapped = objectMapper.convertValue(params, Book.class);
-        return repository.findAll(createExample(bookMapped));
+        return repository.findAll(createExample(bookMapped), pageable);
     }
 
     /**

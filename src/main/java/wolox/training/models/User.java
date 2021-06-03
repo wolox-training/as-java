@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -27,6 +28,7 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
 /**
  * Model to the table Users.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity(name = "users")
 public class User {
 
