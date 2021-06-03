@@ -2,12 +2,16 @@ package wolox.training.controllers;
 
 import static wolox.training.utils.BookConverter.convertBookDtoToBookDao;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,9 +42,13 @@ public class BookController {
 
     private final LibraryService libraryService;
 
-    public BookController(final BookRepository repository, final LibraryService libraryService) {
+    private final ObjectMapper objectMapper;
+
+    public BookController(final BookRepository repository, final LibraryService libraryService,
+            final ObjectMapper objectMapper) {
         this.repository = repository;
         this.libraryService = libraryService;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -58,13 +66,14 @@ public class BookController {
     }
 
     /**
-     * find all the books
+     * find all the books by filters
      *
-     * @return all the books
+     * @return all the books by the filters send
      */
     @GetMapping
-    public Iterable findAll() {
-        return repository.findAll();
+    public Iterable findAll(@RequestParam Map<String,String> params) {
+        Book bookMapped = objectMapper.convertValue(params, Book.class);
+        return repository.findAll(createExample(bookMapped));
     }
 
     /**
@@ -152,4 +161,10 @@ public class BookController {
         Book book = convertBookDtoToBookDao(libraryService.searchBookByIsbn(isbn));
         return repository.save(book);
     }
+
+    private Example<Book> createExample(Book book){
+        ExampleMatcher matcherExample = ExampleMatcher.matchingAny().withIgnoreNullValues();
+        return Example.of(book, matcherExample);
+    }
+
 }

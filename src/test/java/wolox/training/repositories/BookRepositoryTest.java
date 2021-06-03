@@ -10,6 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Example;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
+
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import wolox.training.models.Book;
@@ -56,5 +60,17 @@ class BookRepositoryTest {
         List<Book> booksFound = bookRepository.findAllByPublisherIsAndGenreIsAndYear(publisher, null, null);
 
         assertEquals(1, booksFound.size());
+    }
+
+    @Test
+    public void testFindAllByQueryParamsIwhenOnlySentIsbnAndReturnABook() {
+        bookRepository.save(book());
+        bookRepository.save(book());
+        Book book = new Book();
+        book.setIsbn("YBD-CSAE");
+        ExampleMatcher matcherExample = ExampleMatcher.matchingAny().withIgnoreNullValues();
+        List<Book> booksFound = bookRepository.findAll(Example.of(book, matcherExample));
+
+        assertEquals(2, booksFound.size());
     }
 }
