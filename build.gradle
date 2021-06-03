@@ -29,7 +29,6 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
 	testImplementation('com.h2database:h2')
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 }
 
 test {
