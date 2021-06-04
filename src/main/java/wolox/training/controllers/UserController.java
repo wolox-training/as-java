@@ -57,9 +57,9 @@ public class UserController {
      * @return all users
      */
     @GetMapping
-    public Iterable findAll(@RequestParam Map<String,String> params, Pageable pageable) {
+    public Iterable findAll(@RequestParam Map<String,String> params) {
         User userMapped = objectMapper.convertValue(params, User.class);
-        return userRepository.findAll(createExample(userMapped), pageable);
+        return userRepository.findAll(createExample(userMapped));
     }
 
     /**

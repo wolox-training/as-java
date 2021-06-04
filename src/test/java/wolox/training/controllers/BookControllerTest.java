@@ -56,7 +56,7 @@ class BookControllerTest {
         mvc.perform(get("/api/books")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].genre", is("Action")));;
+                .andExpect(jsonPath("$.content[0].genre", is("Action")));
     }
 
     @WithMockUser
