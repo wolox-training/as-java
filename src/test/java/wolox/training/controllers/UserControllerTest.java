@@ -21,9 +21,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
@@ -45,11 +49,13 @@ class UserControllerTest {
     @WithMockUser
     @Test
     void testFindAllWhenReturnSuccessResponse() throws Exception {
-        when(userRepository.findAll(any(Example.class))).thenReturn(listUsers());
+        Page<User> listUsers = new PageImpl(listUsers());
+        when(userRepository.findAll(any(Example.class),any(Pageable.class))).thenReturn(listUsers);
 
         mvc.perform(get("/api/users")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].username", is("andreysanp")));;
     }
 
     @WithMockUser
