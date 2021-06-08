@@ -16,11 +16,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +40,9 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="user_type",discriminatorType= DiscriminatorType.STRING)
+@DiscriminatorValue(value="user")
 @Entity(name = "users")
 public class User {
 
