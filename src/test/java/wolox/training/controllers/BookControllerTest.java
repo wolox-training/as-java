@@ -1,42 +1,39 @@
 package wolox.training.controllers;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static wolox.training.builder.BookBuilder.*;
-import static wolox.training.builder.UserBuilder.listUsers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.models.Book;
-import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
+import wolox.training.service.LibraryService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureWireMock(port = 8087)
 class BookControllerTest {
 
     @MockBean
@@ -102,6 +99,17 @@ class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.genre", is("Action")));
+    }
+
+    @WithMockUser
+    @Test
+    void testFindByIsbnWhenReturnSuccessCreateResponse() throws Exception {
+        when(repository.findFirstByIsbn(any())).thenReturn(Optional.empty());
+        LibraryService.API_LIBRARY = "http://localhost:8087/api/books?bibkeys=ISBN:";
+
+        mvc.perform(get("/api/books/isbn/251065164561")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
     }
 
 }
