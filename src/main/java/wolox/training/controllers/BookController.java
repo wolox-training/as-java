@@ -1,8 +1,11 @@
 package wolox.training.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import wolox.training.enums.BookError;
 import wolox.training.models.Book;
@@ -21,8 +25,9 @@ import wolox.training.repositories.BookRepository;
 /**
  * The api rest Book controller.
  */
-@Controller
+@RestController
 @RequestMapping("/api/books")
+@Api
 public class BookController {
 
     private final BookRepository repository;
@@ -79,6 +84,8 @@ public class BookController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a book", response = Book.class)
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Successfully created Book")})
     public Book create(@RequestBody Book book) {
         return repository.save(book);
     }
@@ -91,7 +98,11 @@ public class BookController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    @ApiOperation(value = "Delete a book by Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted book"),
+            @ApiResponse(code = 404, message = "The book is not found")})
+    public void delete(@ApiParam(value = "the book id", example = "1", required = true) @PathVariable Long id) {
         findOne(id);
         repository.deleteById(id);
     }

@@ -25,10 +25,8 @@ import wolox.training.repositories.UserRepository;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final BookRepository bookRepository;
 
     public UserController(final UserRepository userRepository, final BookRepository bookRepository) {
