@@ -1,6 +1,5 @@
 package wolox.training.models;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -8,22 +7,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import wolox.training.enums.ValidationError;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
@@ -31,10 +32,17 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
  * Model to the table Users.
  */
 @Data
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="user_type",discriminatorType= DiscriminatorType.STRING)
+@DiscriminatorValue(value="user")
 @Entity(name = "users")
 public class User {
+
+
+    public User() {
+        userType = getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -42,6 +50,9 @@ public class User {
 
     @NotNull
     private String username;
+
+    @Column(name = "user_type", insertable=false ,updatable = false)
+    private String userType;
 
     @NotNull
     private String name;
