@@ -66,17 +66,17 @@ public class BookController {
         return "greeting";
     }
 
+
     /**
-     * find all the books by filters
+     * find all the books by filters And Paging
      *
-     * @return all the books by the filters send
+     * @return Page of all the books by the filters send
      */
     @GetMapping
-    public Iterable findAll(@RequestParam Map<String,String> params) {
+    public Iterable findAll(@RequestParam Map<String,String> params,Pageable pageable) {
         Book bookMapped = objectMapper.convertValue(params, Book.class);
-        return repository.findAll(createExample(bookMapped));
+        return repository.findAll(createExample(bookMapped),pageable);
     }
-
     /**
      * Find book by Id
      *

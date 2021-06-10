@@ -52,14 +52,14 @@ public class UserController {
     }
 
     /**
-     * Find all users
+     * Find all users by filters And Paging
      *
-     * @return all users
+     * @return Page of all users by the filters send
      */
     @GetMapping
-    public Iterable findAll(@RequestParam Map<String,String> params) {
+    public Iterable findAll(@RequestParam Map<String,String> params,Pageable pageable) {
         User userMapped = objectMapper.convertValue(params, User.class);
-        return userRepository.findAll(createExample(userMapped));
+        return userRepository.findAll(createExample(userMapped),pageable);
     }
 
     /**
