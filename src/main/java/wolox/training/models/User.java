@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -21,12 +22,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import wolox.training.enums.ValidationError;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
 /**
  * Model to the table Users.
  */
+@Data
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity(name = "users")
 public class User {
 
@@ -52,51 +58,6 @@ public class User {
     @NotNull
     private String password;
 
-    public User() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = checkNotNull(id, ValidationError.NULL_VALUE.getMsg());
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        checkArgument(!isNullOrEmpty(username), ValidationError.NULL_VALUE.getMsg());
-        this.username = username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        checkArgument(!isNullOrEmpty(name), ValidationError.NULL_VALUE.getMsg());
-        this.name = name;
-    }
-
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(LocalDate birthdate) {
-        checkNotNull(birthdate, ValidationError.NULL_VALUE.getMsg());
-        checkArgument(birthdate.isBefore(LocalDate.now()), ValidationError.DATE_IS_AFTER.getMsg());
-        this.birthdate =birthdate;
-    }
-
-    public List<Book> getBooks() {
-        return (List<Book>) Collections.unmodifiableList(books);
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = checkNotNull(books, ValidationError.NULL_VALUE.getMsg());
-    }
 
     /**
      * Add a book if not already exists

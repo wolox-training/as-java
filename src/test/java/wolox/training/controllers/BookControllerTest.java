@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wolox.training.builder.BookBuilder.*;
+import static wolox.training.builder.UserBuilder.listUsers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
@@ -22,10 +23,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.models.Book;
+import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 
 @SpringBootTest
@@ -43,13 +50,13 @@ class BookControllerTest {
     @WithMockUser
     @Test
     void testFindAllWhenReturnSuccessResponse() throws Exception {
-        when(repository.findAll()).thenReturn(listBooks());
+        Page<Book> listBooks = new PageImpl(listBooks());
+        when(repository.findAll(any(Example.class),any(Pageable.class))).thenReturn(listBooks);
 
         mvc.perform(get("/api/books")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].genre", is("Action")));
+                .andExpect(jsonPath("$.content[0].genre", is("Action")));
     }
 
     @WithMockUser

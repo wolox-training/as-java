@@ -1,6 +1,10 @@
 package wolox.training.controllers;
 
-import java.security.Principal;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,21 +41,25 @@ public class UserController {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ObjectMapper objectMapper;
+
     public UserController(final UserRepository userRepository, final BookRepository bookRepository,
-            final PasswordEncoder passwordEncoder) {
+            final PasswordEncoder passwordEncoder, ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.passwordEncoder = passwordEncoder;
+        this.objectMapper = objectMapper;
     }
 
     /**
-     * Find all users
+     * Find all users by filters And Paging
      *
-     * @return all users
+     * @return Page of all users by the filters send
      */
     @GetMapping
-    public Iterable findAll() {
-        return userRepository.findAll();
+    public Iterable findAll(@RequestParam Map<String,String> params,Pageable pageable) {
+        User userMapped = objectMapper.convertValue(params, User.class);
+        return userRepository.findAll(createExample(userMapped),pageable);
     }
 
     /**
@@ -181,5 +190,10 @@ public class UserController {
 
     private void safeguardPassword(User userFound, User userRequest){
         userRequest.setPassword(userFound.getPassword());
+    }
+
+    private Example<User> createExample(User user){
+        ExampleMatcher matcherExample = ExampleMatcher.matchingAny().withIgnoreNullValues();
+        return Example.of(user, matcherExample);
     }
 }

@@ -1,6 +1,5 @@
 package wolox.training.controllers;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -17,16 +16,18 @@ import static wolox.training.builder.BookBuilder.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
@@ -48,13 +49,13 @@ class UserControllerTest {
     @WithMockUser
     @Test
     void testFindAllWhenReturnSuccessResponse() throws Exception {
-        when(userRepository.findAll()).thenReturn(listUsers());
+        Page<User> listUsers = new PageImpl(listUsers());
+        when(userRepository.findAll(any(Example.class),any(Pageable.class))).thenReturn(listUsers);
 
         mvc.perform(get("/api/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name", is("andrey")));
+                .andExpect(jsonPath("$.content[0].username", is("andreysanp")));
     }
 
     @WithMockUser
