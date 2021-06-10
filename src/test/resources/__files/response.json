@@ -1,0 +1,27 @@
+{
+  "ISBN:251065164561": {
+    "url": "https://openlibrary.org/books/OL1397864M/Zen_speaks",
+    "key": "/books/OL1397864M",
+    "title": "Zen speaks",
+    "subtitle": "shouts of nothingness",
+    "authors": [
+      {
+        "url": "https://openlibrary.org/authors/OL223368A/Zhizhong_Cai",
+        "name": "Zhizhong Cai"
+      }
+    ],
+    "number_of_pages": 159,
+    "pagination": "159 p. :",
+    "publishers": [
+      {
+        "name": "Anchor Books"
+      }
+    ],
+    "publish_date": "1994",
+    "cover": {
+      "small": "https://covers.openlibrary.org/b/id/240726-S.jpg",
+      "medium": "https://covers.openlibrary.org/b/id/240726-M.jpg",
+      "large": "https://covers.openlibrary.org/b/id/240726-L.jpg"
+    }
+  }
+}

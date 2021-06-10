@@ -17,7 +17,7 @@ public class LibraryService implements ApiLibrary {
 
     private final ObjectMapper objectMapper;
 
-    private static final String API_LIBRARY = "https://openlibrary.org/api/books?bibkeys=ISBN:";
+    public static  String API_LIBRARY = "https://openlibrary.org/api/books?bibkeys=ISBN:";
 
     private static  final String FORMAT = "&format=json&jscmd=data";
 
