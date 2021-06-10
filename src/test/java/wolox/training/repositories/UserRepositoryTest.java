@@ -3,6 +3,8 @@ package wolox.training.repositories;
 import static org.junit.jupiter.api.Assertions.*;
 import static wolox.training.builder.UserBuilder.user;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,5 +35,16 @@ class UserRepositoryTest {
         User user = userRepository.save(user());
 
         assertEquals("andreysanp", user.getUsername());
+    }
+
+    @Test
+    void testFindAllByBirthdateIsBetweenAndNameIgnoreCaseContainingWhenReturnAUser() {
+        userRepository.save(user());
+        LocalDate startDate = LocalDate.of(1995,02,16);
+        LocalDate endDate = LocalDate.of(1997,02,16);
+        String character = "A";
+        List<User> usersFound = userRepository.findAllByBirthdateIsBetweenAndNameIgnoreCaseContaining(startDate, endDate, character);
+
+        assertEquals(1, usersFound.size());
     }
 }

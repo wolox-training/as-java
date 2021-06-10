@@ -1,5 +1,7 @@
 package wolox.training.repositories;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +18,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
      */
 
     Optional<User> findFirstByUsername(String username);
+
+    List<User> findAllByBirthdateIsBetweenAndNameIgnoreCaseContaining(LocalDate startDate, LocalDate endDate, String characters);
 }
