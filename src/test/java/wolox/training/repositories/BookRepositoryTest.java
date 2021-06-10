@@ -3,6 +3,7 @@ package wolox.training.repositories;
 import static org.junit.jupiter.api.Assertions.*;
 import static wolox.training.builder.BookBuilder.*;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,5 +34,27 @@ class BookRepositoryTest {
         Optional<Book> author = bookRepository.findFirstByAuthor("Jaime");
 
         assertEquals("Jaime", author.get().getAuthor());
+    }
+
+    @Test
+    public void testFindAllByPublisherIsAndGenreIsAndYearwhenReturnABook() {
+        bookRepository.save(book());
+        String publisher = "War Car 2";
+        String genre = "Action";
+        String year = "1990";
+
+        List<Book> booksFound = bookRepository.findAllByPublisherIsAndGenreIsAndYear(publisher, genre, year);
+
+        assertEquals(1, booksFound.size());
+    }
+
+    @Test
+    public void testFindAllByPublisherIsAndGenreIsAndYearwhenYearAndGenreAreNullAndReturnABook() {
+        bookRepository.save(book());
+        String publisher = "War Car 2";
+
+        List<Book> booksFound = bookRepository.findAllByPublisherIsAndGenreIsAndYear(publisher, null, null);
+
+        assertEquals(1, booksFound.size());
     }
 }

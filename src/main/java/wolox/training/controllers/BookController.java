@@ -1,10 +1,13 @@
 package wolox.training.controllers;
 
+import static wolox.training.utils.BookConverter.convertBookDtoToBookDao;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import wolox.training.enums.BookError;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.service.LibraryService;
 
 /**
  * The api rest Book controller.
@@ -32,8 +36,11 @@ public class BookController {
 
     private final BookRepository repository;
 
-    public BookController(final BookRepository repository) {
+    private final LibraryService libraryService;
+
+    public BookController(final BookRepository repository, final LibraryService libraryService) {
         this.repository = repository;
+        this.libraryService = libraryService;
     }
 
     /**
@@ -123,6 +130,26 @@ public class BookController {
                     HttpStatus.BAD_REQUEST, BookError.BOOK_ID_MISMATCH.getMsg());
         }
         findOne(id);
+        return repository.save(book);
+    }
+
+    /**
+     * Find book by isbn
+     *
+     * @param isbn: Book isbn (String)
+     *
+     * @return the book by the isbn
+     * @exception ResponseStatusException if a book don´t exists in api library
+     */
+    @GetMapping("/isbn/{isbn}")
+    public Book findByIsbn(@PathVariable String isbn, HttpServletResponse response) {
+        response.setStatus(200);
+        return repository.findFirstByIsbn(isbn).orElseGet(() -> searchBookInLibrary(isbn, response));
+    }
+
+    private Book searchBookInLibrary(String isbn, HttpServletResponse response){
+        response.setStatus(201);
+        Book book = convertBookDtoToBookDao(libraryService.searchBookByIsbn(isbn));
         return repository.save(book);
     }
 }

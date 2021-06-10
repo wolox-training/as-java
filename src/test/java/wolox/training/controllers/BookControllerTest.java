@@ -18,15 +18,18 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.repositories.BookRepository;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(BookController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class BookControllerTest {
 
     @MockBean
@@ -37,6 +40,7 @@ class BookControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @WithMockUser
     @Test
     void testFindAllWhenReturnSuccessResponse() throws Exception {
         when(repository.findAll()).thenReturn(listBooks());
@@ -48,7 +52,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$[0].genre", is("Action")));
     }
 
-
+    @WithMockUser
     @Test
     void testFindOneWhenReturnSuccessResponse() throws Exception {
         when(repository.findById(2L)).thenReturn(Optional.of(book()));
@@ -70,6 +74,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.genre", is("Action")));
     }
 
+    @WithMockUser
     @Test
     void testDeleteWhenReturnSuccessDeleteResponse() throws Exception {
         when(repository.findById(2L)).thenReturn(Optional.of(book()));
@@ -79,6 +84,7 @@ class BookControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @WithMockUser
     @Test
     void testUpdateWhenReturnSuccessUpdateResponse() throws Exception {
         when(repository.findById(2L)).thenReturn(Optional.of(book()));

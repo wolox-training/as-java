@@ -19,16 +19,19 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerTest {
 
     @MockBean
@@ -42,6 +45,7 @@ class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @WithMockUser
     @Test
     void testFindAllWhenReturnSuccessResponse() throws Exception {
         when(userRepository.findAll()).thenReturn(listUsers());
@@ -53,7 +57,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].name", is("andrey")));
     }
 
-
+    @WithMockUser
     @Test
     void testFindOneWhenReturnSuccessResponse() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
@@ -75,6 +79,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name", is("andrey")));
     }
 
+    @WithMockUser
     @Test
     void testDeleteWhenReturnSuccessDeleteResponse() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
@@ -84,6 +89,7 @@ class UserControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @WithMockUser
     @Test
     void testUpdateWhenReturnSuccessUpdateResponse() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
@@ -96,6 +102,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name", is("andrey")));
     }
 
+    @WithMockUser
     @Test
     void testAddBookWhenReturnSuccessAddBookResponse() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
@@ -107,6 +114,7 @@ class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @WithMockUser
     @Test
     void testAddBookWhenThrowExceptionByNotFoundBook() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
@@ -117,6 +125,7 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @WithMockUser
     @Test
     void testRemoveBookWhenThrowExceptionByNotFoundBook() throws Exception {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
